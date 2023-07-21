@@ -1,0 +1,42 @@
+// Use DBML to define your database structure
+// Docs: https://dbml.dbdiagram.io/docs
+
+Table reaction {
+  id integer
+  reactioning_post_id integer
+  reactioning_user_id integer
+  type varchar
+  created_at timestamp
+}
+
+Table follow {
+  following_user_id integer
+  followed_user_id integer
+  created_at timestamp
+  modified timestamp
+}
+
+Table user {
+  id integer [primary key]
+  username varchar
+  created_at timestamp
+  modified timestamp
+}
+
+Table post {
+  id integer [primary key]
+  title varchar
+  body text [note: 'Content of the post']
+  user_id integer
+  created_at timestamp
+  modified timestamp
+}
+
+Ref: post.user_id > user.id // many-to-one
+
+Ref: user.id < follow.following_user_id
+
+Ref: user.id < follow.followed_user_id
+
+Ref: post.id - reaction.reactioning_post_id
+Ref: post.id < reaction.reactioning_user_id
