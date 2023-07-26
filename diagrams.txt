@@ -39,4 +39,4 @@ Ref: user.id < follow.following_user_id
 Ref: user.id < follow.followed_user_id
 
 Ref: post.id - reaction.reactioning_post_id
-Ref: post.id < reaction.reactioning_user_id
+Ref: user.id < reaction.reactioning_user_id
