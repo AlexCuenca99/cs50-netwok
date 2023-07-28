@@ -9,4 +9,14 @@ User = get_user_model()
 # Create your tests here.
 class UserModelTest(TestCase):
     def setUp(self) -> None:
-        return super().setUp()
+        self.user = User.objects.create(
+            password="user123",
+            username="AlexC",
+            first_name="Alex",
+            last_name="Cuenca",
+            email="alex@alex.com",
+        )
+
+    def test_user_full_name(self):
+        user_alex = User.objects.get(first_name="Alex")
+        self.assertEqual(user_alex.get_username(), "AlexC")
