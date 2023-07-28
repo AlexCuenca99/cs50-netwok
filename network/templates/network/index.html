@@ -1,5 +1,25 @@
-{% extends "network/layout.html" %}
+{% extends "network/layout.html" %} {% block body %}
+<div class="container-fluid">
+	<h1>All posts</h1>
 
-{% block body %}
-    TODO
+	{% if user.is_authenticated %}
+
+	<form action="{% url 'create-post' %}" method="post">
+		{% csrf_token %}
+		<h2>Create a new post</h2>
+		<div class="form-group">
+			<label for="exampleFormControlTextarea1">Post Content</label>
+			<textarea
+				name="content"
+				class="form-control"
+				id="exampleFormControlTextarea1"
+				rows="3"
+				placeholder="What are you thinking?"
+				required
+			></textarea>
+		</div>
+		<button type="submit" class="btn btn-primary mb-2">Create Post</button>
+	</form>
+	{% endif %}
+</div>
 {% endblock %}
