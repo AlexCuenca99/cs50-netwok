@@ -13,6 +13,14 @@ def index(request):
     return render(request, "network/index.html", all_posts)
 
 
+def me(request):
+    auth_user = User.objects.get(username=request.user)
+    print(auth_user.followers.all())
+    print(auth_user.followings.all())
+    user_data = {"user_data": auth_user}
+    return render(request, "network/me.html", user_data)
+
+
 def create_post(request):
     if request.method == "POST":
         # Get auth user
