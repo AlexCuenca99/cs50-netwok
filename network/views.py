@@ -8,7 +8,9 @@ from .models import User, Post
 
 
 def index(request):
-    return render(request, "network/index.html")
+    posts = Post.objects.all().order_by("-created")
+    all_posts = {"all_posts": posts}
+    return render(request, "network/index.html", all_posts)
 
 
 def create_post(request):
