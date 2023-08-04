@@ -1,8 +1,9 @@
-from django.contrib.auth import authenticate, login, logout
-from django.db import IntegrityError
-from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render
 from django.urls import reverse
+from django.shortcuts import render
+from django.db import IntegrityError
+from django.core.paginator import Paginator
+from django.http import HttpResponse, HttpResponseRedirect
+from django.contrib.auth import authenticate, login, logout
 
 from .models import User, Post
 
@@ -15,9 +16,21 @@ def index(request):
 
 def me(request):
     auth_user = User.objects.get(username=request.user)
-    print(auth_user.followers.all())
-    print(auth_user.followings.all())
-    user_data = {"user_data": auth_user}
+
+    followers_count = auth_user.followers.all().count()
+    followings_count = auth_user.followings.all().count()
+    user_posts = auth_user.authors.all()
+
+    paginator = Paginator(user_posts, 5)
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+
+    user_data = {
+        "user_data": auth_user,
+        "followers": followers_count,
+        "followings": followings_count,
+        "posts": user_posts,
+    }
     return render(request, "network/me.html", user_data)
 
 
