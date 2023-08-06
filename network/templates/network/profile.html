@@ -19,6 +19,15 @@
 						<div class="h6 text-muted">Following</div>
 						<div class="h5">{{followings}}</div>
 					</li>
+
+					<li class="list-group-item">
+						<!-- prettier-ignore -->
+						{% if request.path|cut:'/profiles/' == request.user.username %} 
+							Sorry, you cannot follow your self
+						{% else %}
+							Follow if you are not following me
+						{% endif %}
+					</li>
 				</ul>
 			</div>
 		</div>
