@@ -17,8 +17,8 @@ def index(request):
 def profile(request, username):
     user = get_object_or_404(User, username=username)
 
-    followers_count = user.followers.all().count()
-    followings_count = user.followings.all().count()
+    followers_count = user.followings.all().count()
+    followings_count = user.followers.all().count()
     user_posts = user.authors.all()
 
     paginator = Paginator(user_posts, 5)
