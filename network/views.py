@@ -4,6 +4,8 @@ from django.db import IntegrityError
 from django.core.paginator import Paginator
 from django.http import HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
+from django.db.models import Subquery
+
 
 from .models import User, Post
 
@@ -12,6 +14,16 @@ def index(request):
     posts = Post.objects.all().order_by("-created")
     all_posts = {"all_posts": posts}
     return render(request, "network/index.html", all_posts)
+
+
+# View to display all post of users the logged user is following
+def following(request):
+    user = request.user
+    following_users = user.followers.all()
+
+    posts = Post.objects.filter(author_id__in=following_users.values("following_id"))
+    all_posts = {"all_posts": posts}
+    return render(request, "network/following.html", all_posts)
 
 
 def profile(request, username):
