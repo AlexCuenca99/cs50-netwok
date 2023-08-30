@@ -33,15 +33,19 @@ def profile(request, username):
     followings_count = user.followers.all().count()
     user_posts = user.authors.all()
 
-    paginator = Paginator(user_posts, 5)
-    page_number = request.GET.get("page")
+    per_page = 10
+    paginator = Paginator(user_posts, per_page)
+    page_number = request.GET.get("page", 10)
     page_obj = paginator.get_page(page_number)
+
+    user_posts = [{}]
 
     user_data = {
         "user_data": user,
         "followers": followers_count,
         "followings": followings_count,
         "posts": user_posts,
+        "page_obj": page_obj,
     }
     return render(request, "network/profile.html", user_data)
 
