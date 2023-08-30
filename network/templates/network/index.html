@@ -71,6 +71,8 @@
 						</div>
 					</div>
 				</div>
+
+				{% if user.is_authenticated %} {% if user == post.author %}
 				<div>
 					<div class="dropdown">
 						<button
@@ -88,26 +90,23 @@
 							aria-labelledby="gedf-drop1"
 						>
 							<div class="h6 dropdown-header">Configuration</div>
-							<a class="dropdown-item" href="#">Save</a>
-							<a class="dropdown-item" href="#">Hide</a>
-							<a class="dropdown-item" href="#">Report</a>
+							<a
+								class="dropdown-item"
+								href="#"
+								data-toggle="modal"
+								data-target="#exampleModal"
+								>Edit</a
+							>
 						</div>
 					</div>
 				</div>
+				{% endif %} {% endif %}
 			</div>
 		</div>
 		<div class="card-body">
 			<div class="text-muted h7 mb-2">
 				<i class="fa fa-clock-o"></i>{{post.created}}
 			</div>
-			{% comment %}
-			<a class="card-link" href="#">
-				<h5 class="card-title">
-					Lorem ipsum dolor sit amet, consectetur adip.
-				</h5>
-			</a>
-			{% endcomment %}
-
 			<p class="card-text">{{post.content}}</p>
 		</div>
 		<div class="card-footer">
@@ -115,7 +114,60 @@
 				><i class="fa fa-gittip"></i> Like 0</a
 			>
 		</div>
-		{% comment %} End Post {% endcomment %} {% endfor %}
+
+		{% comment %} End Post {% endcomment %}
+
+		<!-- Modal -->
+		<div
+			class="modal fade"
+			id="exampleModal"
+			tabindex="-1"
+			aria-labelledby="exampleModalLabel"
+			aria-hidden="true"
+		>
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h1 class="modal-title fs-5" id="exampleModalLabel">
+							Modal title
+						</h1>
+						<button
+							type="button"
+							class="btn-close"
+							data-dismiss="modal"
+							aria-label="Close"
+						></button>
+					</div>
+					<div class="modal-body">
+						<div>
+							<label class="sr-only" for="message">post</label>
+							<textarea
+								name="content"
+								class="form-control"
+								id="message"
+								rows="3"
+								placeholder="What are you thinking?"
+							>
+{{post.content}}</textarea
+							>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button
+							type="button"
+							class="btn btn-secondary"
+							data-dismiss="modal"
+						>
+							Close
+						</button>
+						<button type="button" class="btn btn-primary">
+							Save changes
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
-	{% endblock %}
+
+	{% endfor %} {% endblock %}
 </div>
