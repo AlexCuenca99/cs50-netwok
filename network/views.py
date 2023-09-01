@@ -12,8 +12,9 @@ from .models import User, Post
 def index(request):
     posts = Post.objects.all().order_by("-created")
 
-    paginator = Paginator(posts, 10)
-    page_number = request.GET.get("page", 10)
+    posts_per_page = 10
+    paginator = Paginator(posts, posts_per_page)
+    page_number = request.GET.get("page", posts_per_page)
     page_obj = paginator.get_page(page_number)
 
     data = {"all_posts": posts, "posts_obj": page_obj}
@@ -38,19 +39,18 @@ def profile(request, username):
     followings_count = user.followers.all().count()
     user_posts = user.authors.all()
 
-    per_page = 10
-    paginator = Paginator(user_posts, per_page)
-    page_number = request.GET.get("page", 10)
+    posts_per_page = 10
+    paginator = Paginator(user_posts, posts_per_page)
+    page_number = request.GET.get("page", posts_per_page)
     page_obj = paginator.get_page(page_number)
 
-    user_posts = [{}]
+    user_posts = page_obj
 
     user_data = {
         "user_data": user,
         "followers": followers_count,
         "followings": followings_count,
         "posts": user_posts,
-        "page_obj": page_obj,
     }
     return render(request, "network/profile.html", user_data)
 
