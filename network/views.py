@@ -4,7 +4,6 @@ from django.db import IntegrityError
 from django.core.paginator import Paginator
 from django.http import HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
-from django.db.models import Subquery
 
 
 from .models import User, Post
@@ -12,8 +11,14 @@ from .models import User, Post
 
 def index(request):
     posts = Post.objects.all().order_by("-created")
-    all_posts = {"all_posts": posts}
-    return render(request, "network/index.html", all_posts)
+
+    paginator = Paginator(posts, 10)
+    page_number = request.GET.get("page", 10)
+    page_obj = paginator.get_page(page_number)
+
+    data = {"all_posts": posts, "posts_obj": page_obj}
+
+    return render(request, "network/index.html", data)
 
 
 # View to display all post of users the logged user is following
