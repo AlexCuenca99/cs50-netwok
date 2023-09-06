@@ -6,7 +6,7 @@ from django.http import HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
 
 
-from .models import User, Post
+from .models import User, Post, Follow
 
 
 def index(request):
@@ -20,6 +20,30 @@ def index(request):
     data = {"all_posts": posts, "posts_obj": page_obj}
 
     return render(request, "network/index.html", data)
+
+
+def follow_user(request, username):
+    user = request.user
+    following_user = get_object_or_404(User, username=username)
+
+    try:
+        user.followers.add(following_user)
+    except IntegrityError:
+        pass
+
+    return HttpResponseRedirect(reverse(index))
+
+
+def unfollow_user(request, username):
+    user = request.user
+    following_user = get_object_or_404(User, username=username)
+
+    try:
+        user.followers.remove(following_user)
+    except IntegrityError:
+        pass
+
+    return HttpResponseRedirect(reverse(index))
 
 
 # View to display all post of users the logged user is following
@@ -46,11 +70,19 @@ def profile(request, username):
 
     user_posts = page_obj
 
+    can_follow = not Follow.objects.filter(
+        following__username=user, follower=request.user
+    ).exists()
+
+    print(
+        Follow.objects.filter(following__username=user, follower=request.user).exists()
+    )
     user_data = {
         "user_data": user,
         "followers": followers_count,
         "followings": followings_count,
         "posts": user_posts,
+        "can_follow": can_follow,
     }
     return render(request, "network/profile.html", user_data)
 
