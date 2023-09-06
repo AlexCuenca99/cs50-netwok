@@ -4,7 +4,7 @@
 		<div class="col-md-4">
 			<div class="card">
 				<div class="card-body">
-					<div class="h5">@{{user_data.username}}</div>
+					<div class="h5">@ {{user_data.username}}</div>
 					<div class="h7 text-muted">
 						Fullname : {{user_data.first_name}}
 						{{user_data.last_name}}
@@ -21,16 +21,20 @@
 					</li>
 
 					<li class="list-group-item">
-						<!-- prettier-ignore -->
-
-						{% if user.is_authenticated %}
+						{% if user.is_authenticated %} 
 							{% if request.path|cut:'/profiles/' == request.user.username %} 
-								Sorry, you cannot follow your self
+								Sorry, you cannot follow your self 
 							{% else %}
-								Follow if you are not following me
-							{% endif %}
-						{% else %}
-							Login to follow the user
+								{% if can_follow %}
+									<button onClick="">Follow me</button>
+								{% else %}
+									
+									<button onClick="">Unfollow</button>
+								{% endif %}
+								
+							{% endif %} 
+						{% else %} 
+							Login to follow the user 
 						{% endif %}
 					</li>
 				</ul>
