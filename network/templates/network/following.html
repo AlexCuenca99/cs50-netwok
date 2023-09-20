@@ -58,6 +58,15 @@
 	<div class="card-footer">
 		<a href="#" class="card-link"><i class="fa fa-gittip"></i> Like 0</a>
 	</div>
-	{% comment %} End Post {% endcomment %} {% endfor %}
+	{% comment %} End Post {% endcomment %} 
+	{%empty%}
+	<div class="vh-100 d-flex justify-content-center">
+		<span >
+			<h3 class="text-secondary font-weight-bolder ">
+				<i class="fa fa-gittip"></i> 
+				Oops... there is no post.</span>
+			</h3> 
+	</div>
+	{% endfor %}
 </div>
 {% endblock body %}
