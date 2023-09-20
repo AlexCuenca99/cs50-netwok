@@ -65,7 +65,7 @@
 			<div class="d-flex justify-content-between align-items-center">
 				<div class="d-flex justify-content-between align-items-center">
 					<div class="ml-2">
-						<div class="h5 m-0">@{{post.author.username}}</div>
+						<a href="{% url 'profiles' post.author.username %}" class="h5 m-0">@{{post.author.username}}</a>
 						<div class="h7 text-muted">
 							{{post.author.first_name}} {{post.author.last_name}}
 						</div>
