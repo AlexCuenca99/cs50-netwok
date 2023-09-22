@@ -1,4 +1,13 @@
-{% extends "network/layout.html" %} {% block body %}
+{% extends "network/layout.html" %} 
+
+{% block body %}
+
+<script>
+	function handlePostContentUpdate(e){
+		console.log(e)
+	}
+</script>
+
 <div class="container-fluid">
 	<h1>All posts</h1>
 
@@ -59,7 +68,11 @@
 		{% comment %} End Post {% endcomment %}
 	</form>
 
-	{% endif %} {% for post in posts_obj %} {% comment %} Post {% endcomment %}
+	{% endif %} 
+	
+	{% for post in posts_obj %} 
+	
+	{% comment %} Post {% endcomment %}
 	<div class="card gedf-card mt-5">
 		<div class="card-header">
 			<div class="d-flex justify-content-between align-items-center">
@@ -72,35 +85,36 @@
 					</div>
 				</div>
 
-				{% if user.is_authenticated %} {% if user == post.author %}
-				<div>
-					<div class="dropdown">
-						<button
-							class="btn btn-link dropdown-toggle"
-							type="button"
-							id="gedf-drop1"
-							data-toggle="dropdown"
-							aria-haspopup="true"
-							aria-expanded="false"
-						>
-							<i class="fa fa-ellipsis-h"></i>
-						</button>
-						<div
-							class="dropdown-menu dropdown-menu-right"
-							aria-labelledby="gedf-drop1"
-						>
-							<div class="h6 dropdown-header">Configuration</div>
-							<a
-								class="dropdown-item"
-								href="#"
-								data-toggle="modal"
-								data-target="#exampleModal"
-								>Edit</a
-							>
+				{% if user.is_authenticated %} 
+					{% if user == post.author %}
+						<div>
+							<div class="dropdown">
+								<button
+									class="btn btn-link dropdown-toggle"
+									type="button"
+									id="gedf-drop1"
+									data-toggle="dropdown"
+									aria-haspopup="true"
+									aria-expanded="false"
+								>
+									<i class="fa fa-ellipsis-h"></i>
+								</button>
+								<div
+									class="dropdown-menu dropdown-menu-right"
+									aria-labelledby="gedf-drop1"
+								>
+									<div class="h6 dropdown-header">Configuration</div>
+									<a
+										class="dropdown-item"
+										href="#"
+										data-toggle="modal"
+										data-target="#modal-edit-post-{{post.id}}"
+										>Edit</a>
+								</div>
+							</div>
 						</div>
-					</div>
-				</div>
-				{% endif %} {% endif %}
+					{% endif %} 
+				{% endif %}
 			</div>
 		</div>
 		<div class="card-body">
@@ -120,7 +134,7 @@
 		<!-- Modal -->
 		<div
 			class="modal fade"
-			id="exampleModal"
+			id="modal-edit-post-{{post.id}}"
 			tabindex="-1"
 			aria-labelledby="exampleModalLabel"
 			aria-hidden="true"
@@ -129,7 +143,7 @@
 				<div class="modal-content">
 					<div class="modal-header">
 						<h1 class="modal-title fs-5" id="exampleModalLabel">
-							Modal title
+							Edit post
 						</h1>
 						<button
 							type="button"
@@ -144,12 +158,12 @@
 							<textarea
 								name="content"
 								class="form-control"
-								id="message"
+								id="text-area-{{post.id}}"
 								rows="3"
 								placeholder="What are you thinking?"
 							>
-{{post.content}}</textarea
-							>
+								{{post.content}}
+							</textarea>
 						</div>
 					</div>
 					<div class="modal-footer">
@@ -160,7 +174,7 @@
 						>
 							Close
 						</button>
-						<button type="button" class="btn btn-primary">
+						<button type="button" class="btn btn-primary" onclick="handlePostContentUpdate({{post.id}})">
 							Save changes
 						</button>
 					</div>
