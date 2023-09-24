@@ -3,8 +3,17 @@
 {% block body %}
 
 <script>
-	function handlePostContentUpdate(e){
-		console.log(e)
+	function getCookie(tokenName){
+		const value = `; ${document.cookie}`;
+		const cookieParts = value.split(`; ${tokenName}=`);
+		if(cookieParts.length == 2){
+			return cookieParts.pop().split(';').shift();
+		}
+	}
+	function handlePostContentUpdate(id){
+		const postToEditValue = document.getElementById(`text-area-${id}`).value
+		
+		fetch(`/edit-post/${id}`, {method: 'PATCH', headers: {"Content-Type": "application/json", "X-CSRFToken": getCookie("csrftoken")}, body: JSON.stringify({content: postToEditValue})}).then(response => {const result = response.json(); console.log(result)})
 	}
 </script>
 
@@ -136,13 +145,13 @@
 			class="modal fade"
 			id="modal-edit-post-{{post.id}}"
 			tabindex="-1"
-			aria-labelledby="exampleModalLabel"
+			aria-labelledby="modal-edit-post-aria-label-{{post.id}}"
 			aria-hidden="true"
 		>
 			<div class="modal-dialog">
 				<div class="modal-content">
 					<div class="modal-header">
-						<h1 class="modal-title fs-5" id="exampleModalLabel">
+						<h1 class="modal-title fs-5">
 							Edit post
 						</h1>
 						<button
@@ -153,18 +162,12 @@
 						></button>
 					</div>
 					<div class="modal-body">
-						<div>
-							<label class="sr-only" for="message">post</label>
-							<textarea
-								name="content"
-								class="form-control"
-								id="text-area-{{post.id}}"
-								rows="3"
-								placeholder="What are you thinking?"
-							>
-								{{post.content}}
-							</textarea>
-						</div>
+						<textarea 
+						name="content" 
+						class="form-control" 
+						id="text-area-{{ post.id }}" 
+						rows="3" 
+						placeholder="What are you thinking?">{{post.content}}</textarea>
 					</div>
 					<div class="modal-footer">
 						<button
