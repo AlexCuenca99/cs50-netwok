@@ -1,8 +1,9 @@
+import json
 from django.urls import reverse
 from django.shortcuts import render, get_object_or_404
 from django.db import IntegrityError
 from django.core.paginator import Paginator
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.contrib.auth import authenticate, login, logout
 
 
@@ -100,6 +101,20 @@ def create_post(request):
             raise Exception("Something went wrong", e)
 
         return HttpResponseRedirect(reverse(index))
+
+
+def edit_post(request, post_id):
+    if request.method == "PATCH" or request.method == "PUT":
+        body = json.loads(request.body)
+
+        post = Post.objects.get(id=post_id)
+        post.content = body["content"]
+
+        post.save()
+
+        return JsonResponse(
+            {"message": "Post edited successfully", "data": post.content}
+        )
 
 
 def login_view(request):
