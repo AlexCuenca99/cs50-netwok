@@ -2,23 +2,32 @@ import json
 from django.urls import reverse
 from django.shortcuts import render, get_object_or_404
 from django.db import IntegrityError
+from django.db.models import Count
 from django.core.paginator import Paginator
 from django.http import HttpResponseRedirect, JsonResponse
 from django.contrib.auth import authenticate, login, logout
 
 
-from .models import User, Post, Follow
+from .models import User, Post, Follow, Reaction
 
 
 def index(request):
-    posts = Post.objects.all().order_by("-created")
+    posts = (
+        Post.objects.all()
+        .annotate(reactions_count=Count("reaction"))
+        .order_by("-created")
+    )
+
+    reactions = Reaction.objects.filter(user=request.user)
+
+    reactions = [reaction.post.id for reaction in reactions]
 
     posts_per_page = 10
     paginator = Paginator(posts, posts_per_page)
     page_number = request.GET.get("page", posts_per_page)
     page_obj = paginator.get_page(page_number)
 
-    data = {"all_posts": posts, "posts_obj": page_obj}
+    data = {"all_posts": posts, "posts_obj": page_obj, "reactions": reactions}
 
     return render(request, "network/index.html", data)
 
