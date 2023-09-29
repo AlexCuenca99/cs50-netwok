@@ -177,3 +177,31 @@ def register(request):
         return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "network/register.html")
+
+
+def react_post(request, post_id):
+    user = request.user
+    post = get_object_or_404(Post, id=post_id)
+
+    if request.method == "POST":
+        try:
+            Reaction.objects.create(user=user, post=post)
+            count = post.reaction_set.count()
+
+            return JsonResponse(
+                {"message": "Reaction added successfully.", "data": count}
+            )
+        except IntegrityError:
+            return JsonResponse(
+                {"message": "Already reacted to this post.", "data": None}
+            )
+    elif request.method == "DELETE":
+        try:
+            reaction = Reaction.objects.get(user=user, post=post)
+            reaction.delete()
+        except IntegrityError:
+            pass
+        return HttpResponseRedirect(reverse(index))
+
+    else:
+        return HttpResponseRedirect(reverse(index))
