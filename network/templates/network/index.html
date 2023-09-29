@@ -43,7 +43,33 @@
 			}
 			
 		})
-		
+	}
+
+	// Handle like post
+	function handleLike(postId){
+		const reactionIcon = document.getElementById(`reaction-icon-${postId}`)
+		const reactionCounter = document.getElementById(`post-reactions-counter-${postId}`)
+
+		fetch(
+			`react-post/${postId}/`,
+			{
+				method: 'POST',
+				headers: {
+					"Content-Type": "application/json", 
+					"X-CSRFToken": getCookie("csrftoken")
+				}, 
+			}
+		)
+		.then(response => response.json())
+		.then(result => {
+			console.log(result.data)
+		})
+
+	}
+	
+	// Handle dislike post
+	function handleDislike(postId){
+		console.log(postId)
 	}
 </script>
 
@@ -162,15 +188,17 @@
 				<p class="card-text" id="feed-post-content-{{post.id}}">{{post.content}}</p>
 			</div>
 			<div class="card-footer">
-				<a href="#" class="card-link">
-					
-					{% if post.id in reactions %}
-						<i class="fa fa-thumbs-down"></i> Dislike {{post.reactions_count}} 
-					{% else %}
-						<i class="fa fa-thumbs-up"></i> Like {{post.reactions_count}} 
-					{% endif %}
-				</a>
-					
+				{% if post.id in reactions %}
+					<a style="color: inherit;" class="card-link" onclick="handleDislike({{post.id}})">
+						<i class="fa fa-thumbs-down" id="reaction-icon-{{post.id}}"></i>
+					</a>
+					<p id="post-reactions-counter-{{post.id}}">Dislike {{post.reactions_count}} </p>
+				{% else %}
+					<a style="color: inherit;" class="card-link" onclick="handleLike({{post.id}})">
+						<i class="fa fa-thumbs-up" id="reaction-icon-{{post.id}}"></i>
+					</a>
+					<p id="post-reactions-counter-{{post.id}}">Like {{post.reactions_count}} </p>
+				{% endif %}
 			</div>
 
 			{% comment %} End Post {% endcomment %}
