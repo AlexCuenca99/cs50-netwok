@@ -39,6 +39,7 @@ class Reaction(TimeStampedModel, models.Model):
     class Meta:
         verbose_name = "Reaction"
         verbose_name_plural = "Reactions"
+        unique_together = ("user", "post")
 
 
 class Follow(TimeStampedModel, models.Model):
