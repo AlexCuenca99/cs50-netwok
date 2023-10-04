@@ -199,9 +199,16 @@ def react_post(request, post_id):
         try:
             reaction = Reaction.objects.get(user=user, post=post)
             reaction.delete()
+
+            count = post.reaction_set.count()
+
+            return JsonResponse(
+                {"message": "Reaction removed successfully.", "data": count}
+            )
         except IntegrityError:
-            pass
-        return HttpResponseRedirect(reverse(index))
+            return JsonResponse(
+                {"message": "You have not reacted  to this post.", "data": None}
+            )
 
     else:
         return HttpResponseRedirect(reverse(index))
