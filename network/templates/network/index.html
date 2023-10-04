@@ -45,10 +45,15 @@
 		})
 	}
 
+	// TODO: 
+	// Se debe controlar el cambio de la etiqueta <a> para que al cambiar entre
+	// like y dislike llame a la funcion apropiada
 	// Handle like post
 	function handleLike(postId){
 		const reactionIcon = document.getElementById(`reaction-icon-${postId}`)
 		const reactionCounter = document.getElementById(`post-reactions-counter-${postId}`)
+		
+		reactionIcon.classList.remove('fa-thumbs-up')
 
 		fetch(
 			`react-post/${postId}/`,
@@ -62,14 +67,33 @@
 		)
 		.then(response => response.json())
 		.then(result => {
-			console.log(result.data)
+			reactionIcon.classList.add('fa-thumbs-down')
+			reactionCounter.innerHTML = `Dislike ${result.data}`
 		})
 
 	}
 	
 	// Handle dislike post
 	function handleDislike(postId){
-		console.log(postId)
+		const reactionIcon = document.getElementById(`reaction-icon-${postId}`)
+		const reactionCounter = document.getElementById(`post-reactions-counter-${postId}`)
+		
+		reactionIcon.classList.remove('fa-thumbs-down')
+
+		fetch(
+			`react-post/${postId}/`,
+			{
+				method: 'DELETE',
+				headers: {
+					"Content-Type": "application/json", 
+					"X-CSRFToken": getCookie("csrftoken")
+				},
+			}
+		).then(response => response.json())
+		.then(result => {
+			reactionIcon.classList.add('fa-thumbs-up')
+			reactionCounter.innerHTML = `Like ${result.data}`
+		})
 	}
 </script>
 
