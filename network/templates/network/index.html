@@ -52,9 +52,10 @@
 	function handleLike(postId){
 		const reactionIcon = document.getElementById(`reaction-icon-${postId}`)
 		const reactionCounter = document.getElementById(`post-reactions-counter-${postId}`)
+		const reactionIconWrapper = document.getElementById(`reaction-icon-wrapper-${postId}`)
 		
 		reactionIcon.classList.remove('fa-thumbs-up')
-
+		reactionIcon.removeAttribute('onclick')
 		fetch(
 			`react-post/${postId}/`,
 			{
@@ -69,6 +70,7 @@
 		.then(result => {
 			reactionIcon.classList.add('fa-thumbs-down')
 			reactionCounter.innerHTML = `Dislike ${result.data}`
+			reactionIconWrapper.setAttribute("onclick", function() {handleDislike(21)})
 		})
 
 	}
@@ -77,8 +79,10 @@
 	function handleDislike(postId){
 		const reactionIcon = document.getElementById(`reaction-icon-${postId}`)
 		const reactionCounter = document.getElementById(`post-reactions-counter-${postId}`)
+		const reactionIconWrapper = document.getElementById(`reaction-icon-wrapper-${postId}`)
 		
 		reactionIcon.classList.remove('fa-thumbs-down')
+		reactionIcon.removeAttribute('onclick')
 
 		fetch(
 			`react-post/${postId}/`,
@@ -93,6 +97,7 @@
 		.then(result => {
 			reactionIcon.classList.add('fa-thumbs-up')
 			reactionCounter.innerHTML = `Like ${result.data}`
+			reactionIconWrapper.setAttribute("onclick", function handleLikeClick() {handleLike(21)})
 		})
 	}
 </script>
@@ -213,12 +218,12 @@
 			</div>
 			<div class="card-footer">
 				{% if post.id in reactions %}
-					<a style="color: inherit;" class="card-link" onclick="handleDislike({{post.id}})">
+					<a style="color: inherit;" class="card-link" id="reaction-icon-wrapper-{{post.id}}" onclick="handleDislike({{post.id}})">
 						<i class="fa fa-thumbs-down" id="reaction-icon-{{post.id}}"></i>
 					</a>
 					<p id="post-reactions-counter-{{post.id}}">Dislike {{post.reactions_count}} </p>
 				{% else %}
-					<a style="color: inherit;" class="card-link" onclick="handleLike({{post.id}})">
+					<a style="color: inherit;" class="card-link" id="reaction-icon-wrapper-{{post.id}}" onclick="handleLike({{post.id}})">
 						<i class="fa fa-thumbs-up" id="reaction-icon-{{post.id}}"></i>
 					</a>
 					<p id="post-reactions-counter-{{post.id}}">Like {{post.reactions_count}} </p>
