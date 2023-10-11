@@ -45,6 +45,29 @@
 		})
 	}
 
+	let currentReactionState = ""
+	
+	function toggleReaction(postId, reactions){
+		if(currentReactionState){
+			if (currentReactionState === 'Dislike'){
+				handleLike(postId)
+				currentReactionState = "Like"
+			}else{
+				handleDislike(postId)
+				currentReactionState = "Dislike"
+			}
+		}else{
+			if(reactions.includes(postId)){
+				handleDislike(postId)
+				currentReactionState = "Dislike"
+			}else{
+				handleLike(postId)
+				currentReactionState = "Like"
+			}
+		}
+		console.log('currentStateReaction', currentReactionState)
+
+	}
 	// TODO: 
 	// Se debe controlar el cambio de la etiqueta <a> para que al cambiar entre
 	// like y dislike llame a la funcion apropiada
@@ -55,7 +78,7 @@
 		const reactionIconWrapper = document.getElementById(`reaction-icon-wrapper-${postId}`)
 		
 		reactionIcon.classList.remove('fa-thumbs-up')
-		reactionIcon.removeAttribute('onclick')
+
 		fetch(
 			`react-post/${postId}/`,
 			{
@@ -70,7 +93,6 @@
 		.then(result => {
 			reactionIcon.classList.add('fa-thumbs-down')
 			reactionCounter.innerHTML = `Dislike ${result.data}`
-			reactionIconWrapper.setAttribute("onclick", function() {handleDislike(21)})
 		})
 
 	}
@@ -82,7 +104,6 @@
 		const reactionIconWrapper = document.getElementById(`reaction-icon-wrapper-${postId}`)
 		
 		reactionIcon.classList.remove('fa-thumbs-down')
-		reactionIcon.removeAttribute('onclick')
 
 		fetch(
 			`react-post/${postId}/`,
@@ -97,7 +118,6 @@
 		.then(result => {
 			reactionIcon.classList.add('fa-thumbs-up')
 			reactionCounter.innerHTML = `Like ${result.data}`
-			reactionIconWrapper.setAttribute("onclick", function handleLikeClick() {handleLike(21)})
 		})
 	}
 </script>
@@ -218,12 +238,15 @@
 			</div>
 			<div class="card-footer">
 				{% if post.id in reactions %}
-					<a style="color: inherit;" class="card-link" id="reaction-icon-wrapper-{{post.id}}" onclick="handleDislike({{post.id}})">
-						<i class="fa fa-thumbs-down" id="reaction-icon-{{post.id}}"></i>
+					<a style="color: inherit;" class="card-link" 
+						id="reaction-icon-wrapper-{{post.id}}" 
+						onclick="toggleReaction({{post.id}},{{reactions}})">
+						<i class="fa fa-thumbs-down" 
+							id="reaction-icon-{{post.id}}"></i>
 					</a>
 					<p id="post-reactions-counter-{{post.id}}">Dislike {{post.reactions_count}} </p>
 				{% else %}
-					<a style="color: inherit;" class="card-link" id="reaction-icon-wrapper-{{post.id}}" onclick="handleLike({{post.id}})">
+					<a style="color: inherit;" class="card-link" id="reaction-icon-wrapper-{{post.id}}" onclick="toggleReaction({{post.id}},{{reactions}})">
 						<i class="fa fa-thumbs-up" id="reaction-icon-{{post.id}}"></i>
 					</a>
 					<p id="post-reactions-counter-{{post.id}}">Like {{post.reactions_count}} </p>
